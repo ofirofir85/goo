@@ -1,0 +1,45 @@
+{% extends "layout.html"%}
+{%block js%}
+<script type="text/javascript" src="{{url_for('static', filename='js/check_available.js')}}"></script>
+<script type="text/javascript">
+var api_url = "{{url_for('check_available')}}"
+</script>
+{%endblock%}
+
+{%block content%}
+<div class='container' align='center'>
+	<div class='row'>
+		<div class='col-12'>
+			<form method='POST' action="{{url_for('short')}}" class='mb-5 p-3 bg-white rounded'>
+				<div class='form-group'>
+					<div class='input-group mb-3'>
+						<input type='text' class='form-control' id='original_url' name='original_url' placeholder="Your Longggg URL"  onkeyup="check_valid_url()" required>	
+						<div class='valid-feedback'>
+							You've entered a valid URL. Well Done!
+						</div>
+						<div class='invalid-feedback'>
+							You've entered an invalid URL.. (Make sure to add 'http(s)//:')
+						</div>
+					</div>
+				</div>
+				<div class='form-group'>
+					<div class='input-group'>
+						<div class="input-group-prepend">
+							<span class="input-group-text">goo/</span>
+						</div>
+						<input type='text' class='form-control' id='custom_url' name="custom_url" placeholder="Your Desired URL" onkeyup="check_available(api_url)" disabled>
+						<div class='invalid-feedback'>
+							Shortend URL is allready taken :(. Please try something else, or leave empty.
+						</div>
+						<div class='valid-feedback'>
+							This shortend URL is available for your use, and not taken. Yay!
+						</div>
+					</div>
+					<small class='form-text text-left font-weight-bold'>Optional. Leave empty for a randomly generated short URL</small>
+				</div>
+				<input class='btn btn-danger' id='submit' type='submit' value='Short!'/>
+			</form>
+		</div>
+	</div>	
+</div>
+{% endblock %}

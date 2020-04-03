@@ -1,0 +1,22 @@
+<html>
+	<head>
+		<link rel='stylesheet' href="{{url_for('static', filename='css/bootstrap.css')}}">
+		{% block js %}{%endblock%}
+		<link rel="icon" href="{{url_for('static', filename='img/favicon.ico')}}">
+	</head>
+	<body>
+		<header align='center'>
+				<h1 class='display-1'>Goo</h1>
+				<h4 class=display-4>Your Second Favorite URL Shortening Service!</h4>
+		</header>
+		<hr />
+		{%block content%}
+		{%endblock%}
+		<hr />
+		<footer class='page-footer text-light'>
+			<div class='footer-copyright text-center'>
+				Goo, YSFUSS!<br/>Ⓒ Ofir Barkay & Corona, 2020 Ⓒ
+			</div>
+		</footer>
+	</body>
+</html>
