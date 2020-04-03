@@ -43,7 +43,7 @@ function check_valid_url(){ //if the url is valid, enables custom_url input and 
 	reset_result('original_url', false)
 	var original = document.getElementById('original_url')
 	var custom = document.getElementById('custom_url')
-	if(original != ''){ 
+	if(original.value != ''){ 
 		if (is_valid_url(original.value)){
 			original.className = base_form_class + ' is-valid'
 			submit.disabled = false
