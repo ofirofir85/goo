@@ -3,7 +3,7 @@ var base_form_class = 'form-control'
 function check_available(api_url){
 	reset_result('custom_url',true)
 	var custom = document.getElementById('custom_url');
-	var original = document.getElementById('original_url');
+	var long = document.getElementById('long_url');
 	if (custom.value != ''){
 		var xhttp = new XMLHttpRequest();	
 		xhttp.onreadystatechange = function(){
@@ -40,12 +40,12 @@ function on_response(response){ //while getting response from server about url a
 
 function check_valid_url(){ //if the url is valid, enables custom_url input and submit. else disable submit and custom_url input, while showing feedback.
 	console.log('checks if valid url')
-	reset_result('original_url', false)
-	var original = document.getElementById('original_url')
+	reset_result('long_url', false)
+	var long = document.getElementById('long_url')
 	var custom = document.getElementById('custom_url')
-	if(original.value != ''){ 
-		if (is_valid_url(original.value)){
-			original.className = base_form_class + ' is-valid'
+	if(long.value != ''){ 
+		if (is_valid_url(long.value)){
+			long.className = base_form_class + ' is-valid'
 			submit.disabled = false
 			custom = document.getElementById('custom_url')
 			custom.disabled = false
@@ -54,13 +54,13 @@ function check_valid_url(){ //if the url is valid, enables custom_url input and 
 		else{
 			reset_result('custom_url', true)
 			custom.value = ''
-			original.className = base_form_class + ' is-invalid'
+			long.className = base_form_class + ' is-invalid'
 			submit.disabled = true
 			console.log('invalid url')
 		}
 	}
 	else{
-		reset_result('original_url', false)
+		reset_result('long_url', false)
 	}
 }
 

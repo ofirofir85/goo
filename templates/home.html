@@ -13,7 +13,7 @@ var api_url = "{{url_for('check_available')}}"
 			<form method='POST' action="{{url_for('short')}}" class='mb-5 p-3 bg-white rounded'>
 				<div class='form-group'>
 					<div class='input-group mb-3'>
-						<input type='text' class='form-control' id='original_url' name='original_url' placeholder="Your Longggg URL"  onkeyup="check_valid_url()" required>	
+						<input type='text' class='form-control' id='long_url' name='long_url' placeholder="Your Longggg URL"  onkeyup="check_valid_url()" required>	
 						<div class='valid-feedback'>
 							You've entered a valid URL. Well Done!
 						</div>
@@ -40,6 +40,6 @@ var api_url = "{{url_for('check_available')}}"
 				<input class='btn btn-danger' id='submit' type='submit' value='Short!'/>
 			</form>
 		</div>
-	</div>	
+	</div>
 </div>
 {% endblock %}
