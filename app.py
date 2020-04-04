@@ -1,8 +1,9 @@
-from flask import Flask, render_template, url_for, request, redirect, jsonify
+from flask import Flask, render_template, url_for, request, redirect, jsonify, flash
 import random
 import string
 from db_handler import DB_Handler
 app = Flask(__name__)
+app.secret_key = 'asdm32%$nm$#san12'
 url_mapping = {}
 
 @app.route('/')
@@ -30,8 +31,8 @@ def short():
 		while (not is_url_available(short_url)):
 			short_url = generate_short_url()
 	db_handler.add_new_mapping(short_url,long_url, 'test-user')
-	return f'goo/{short_url} will now redirect to {long_url}'
-		
+	flash(f"Great Success! goo/{short_url} will now redirect to {long_url}",'success')
+	return render_template('home.html')
 
 def generate_short_url():
 	chars = list(string.ascii_lowercase + string.digits)
@@ -41,13 +42,13 @@ def generate_short_url():
 
 @app.route('/<short_url>')
 def redirect_to_long(short_url):
-
 	mapping = db_handler.get_mapping(short_url)
 	if mapping:
 		print(f'redirecting {short_url} to {mapping.long_url}')
 		return redirect(mapping.long_url)
 	else:
 		print(f'goo/{short_url} doesnt exits')
+		flash(f'Oops! goo/{short_url} does not exists.. Use this short for your long url down below!', 'warning')
 		return redirect(url_for('home'))
 		##TODO:ADD MESSEGE FOR NOT EXISTING REDIRECTION
 		

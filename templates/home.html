@@ -8,6 +8,15 @@ var api_url = "{{url_for('check_available')}}"
 
 {%block content%}
 <div class='container' align='center'>
+	{% for category, message in get_flashed_messages(with_categories=true) %}
+	<div class='row'>
+		<div class='col-12'>
+			<div class='alert alert-{{category}}' role='alert'>
+				{{message}}
+			</div>
+		</div>
+	</div>
+	{%endfor%}
 	<div class='row'>
 		<div class='col-12'>
 			<form method='POST' action="{{url_for('short')}}" class='mb-5 p-3 bg-white rounded'>
@@ -40,6 +49,9 @@ var api_url = "{{url_for('check_available')}}"
 				<input class='btn btn-danger' id='submit' type='submit' value='Short!'/>
 			</form>
 		</div>
+	</div>
+	<div class='row'>
+		<
 	</div>
 </div>
 {% endblock %}
