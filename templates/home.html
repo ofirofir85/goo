@@ -50,8 +50,45 @@ var api_url = "{{url_for('check_available')}}"
 			</form>
 		</div>
 	</div>
+	{% if mappings|count > 0 %}
 	<div class='row'>
-		<
+		<div class="col-12">
+			<table class='table table-hover table-bordered table-striped table-light'>
+				<tr>
+					<th>
+						Short URL
+					</th>
+					<th>
+						Long URL
+					</th>
+					<th>
+						Creation Time
+					</th>
+					<th>
+						Delete
+					</th>
+				</tr>
+				{% for mapping in mappings %}
+					<tr>
+						<td>
+							goo/{{mapping.short_url}}
+						</td>
+						<td>
+							{{mapping.long_url}}
+						</td>
+						<td>
+							{{mapping.creation_time}}
+						</td>
+						<td>
+							<form action="{{url_for('remove')}}" method='post'>
+								<button type='submit' value='{{mapping.short_url}}' method='post' class='btn btn-danger' name='delete'>Delete</button> 
+							</form>
+						</td>
+					</tr>
+				{%endfor%}
+			</table>
+		</div>
 	</div>
+	{% endif %}
 </div>
 {% endblock %}

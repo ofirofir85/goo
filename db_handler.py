@@ -14,7 +14,7 @@ INSERT INTO {TABLENAME}(short_url, long_url, owner)
 VALUES (:short_url, :long_url, :owner);
 """
 
-GET_MAPPING = f"""
+GET_SINGLE_MAPPING = f"""
 SELECT * 
   FROM {TABLENAME}
  WHERE short_url = :short_url;
@@ -24,19 +24,26 @@ REMOVE_MAPPING = f"""
 DELETE FROM {TABLENAME}
  WHERE short_url = :short_url;
 """
+
+GET_USER_MAPPINGS = f"""
+SELECT *
+  FROM {TABLENAME}
+ WHERE owner = :user
+"""
+
 class DB_Handler(object):
 	def __init__(self):
 		engine = create_engine(DATABASE_URL)
 		self.db = scoped_session(sessionmaker(bind=engine))
 
-	def get_mapping(self, short_url):
+	def get_single_mapping(self, short_url):
 		print(f'quering for {short_url} mapping')
-		mapping = self.db.execute(GET_MAPPING, {'short_url': short_url}).fetchone()
+		mapping = self.db.execute(GET_SINGLE_MAPPING, {'short_url': short_url}).fetchone()
 		if mapping:
 			print(f'found {mapping}')
 			return mapping
 		else:
-			print(f'didnt found any..')
+			print(f'didnt found mapping')
 			return None
 			##TODO:handle execption and raise not found error
 	def add_new_mapping(self, short_url, long_url, owner):
@@ -55,3 +62,7 @@ class DB_Handler(object):
 		self.db.commit()
 		print(f'remove mapping of: {short_url}')
 		##TODO: HANDLE EXEPTIONS
+
+	def get_user_mappings(self, user):
+		mappings = self.db.execute(GET_USER_MAPPINGS, {'user': user}).fetchall()
+		return mappings

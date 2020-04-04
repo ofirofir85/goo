@@ -4,13 +4,13 @@ import string
 from db_handler import DB_Handler
 app = Flask(__name__)
 app.secret_key = 'asdm32%$nm$#san12'
-url_mapping = {}
+
+db_handler = DB_Handler()
 
 @app.route('/')
 def home():
-	return render_template('home.html')
-
-db_handler = DB_Handler()
+	mappings = db_handler.get_user_mappings('test-user')
+	return render_template('home.html', mappings=mappings)
 
 @app.route('/check_available', methods=['POST'])
 def check_available():
@@ -19,7 +19,7 @@ def check_available():
 	return jsonify(result)
 
 def is_url_available(url):
-	mapping = db_handler.get_mapping(url) 
+	mapping = db_handler.get_single_mapping(url) 
 	return False if mapping else True
 
 @app.route('/short', methods=['POST'])
@@ -32,7 +32,7 @@ def short():
 			short_url = generate_short_url()
 	db_handler.add_new_mapping(short_url,long_url, 'test-user')
 	flash(f"Great Success! goo/{short_url} will now redirect to {long_url}",'success')
-	return render_template('home.html')
+	return redirect(url_for('home'))
 
 def generate_short_url():
 	chars = list(string.ascii_lowercase + string.digits)
@@ -42,7 +42,7 @@ def generate_short_url():
 
 @app.route('/<short_url>')
 def redirect_to_long(short_url):
-	mapping = db_handler.get_mapping(short_url)
+	mapping = db_handler.get_single_mapping(short_url)
 	if mapping:
 		print(f'redirecting {short_url} to {mapping.long_url}')
 		return redirect(mapping.long_url)
@@ -52,6 +52,12 @@ def redirect_to_long(short_url):
 		return redirect(url_for('home'))
 		##TODO:ADD MESSEGE FOR NOT EXISTING REDIRECTION
 		
+@app.route('/remove', methods=['POST'])
+def remove():
+	short_url = request.form['delete']
+	db_handler.remove_mapping(short_url)
+	flash(f'Deleted Successfully. goo/{short_url} is now an untaken redirect link.')
+	return redirect(url_for('home'))
 
 if __name__ == '__main__':
 	app.run(debug=True)
