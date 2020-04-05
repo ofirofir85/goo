@@ -54,6 +54,7 @@ function check_valid_url(){ //if the url is valid, enables custom_url input and 
 		else{
 			reset_result('custom_url', true)
 			custom.value = ''
+			custom.disabled = true
 			long.className = base_form_class + ' is-invalid'
 			submit.disabled = true
 			console.log('invalid url')
@@ -61,6 +62,9 @@ function check_valid_url(){ //if the url is valid, enables custom_url input and 
 	}
 	else{
 		reset_result('long_url', false)
+		reset_result('custom_url', false)
+		custom.value = ''
+		custom.disabled = true
 	}
 }
 
