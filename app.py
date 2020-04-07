@@ -5,25 +5,15 @@ from models import *
 
 app = Flask(__name__)
 app.secret_key = 'asdm32%$nm$#san12'
-app.config['DB_CONNECT_DATA'] = {
-	'username': 'postgres',
-	'password': 'admin',
-	'port': '5432',
-	'db_name': 'postgres',
-	'hostname': 'localhost',
-	'db_type': 'postgres'
-}
 USERNAME = 'postgres'
 PASSWORD = 'admin'
 PORT = '5432'
 DB_NAME = 'postgres'
 HOSTNAME = 'localhost'
 DB_TYPE = 'postgres'
-app.config['DB_TABLENAME'] = 'goo_url_mapping'
 app.config['SQLALCHEMY_DATABASE_URI'] = f'{DB_TYPE}://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DB_NAME}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-
 
 @app.route('/')
 def home():

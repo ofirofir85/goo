@@ -1,9 +1,7 @@
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
-from flask import current_app
 
 db = SQLAlchemy()
-
 class Mapping(db.Model):
 	__tablename__ = 'goo_url_mapping'
 	id = db.Column(db.Integer, primary_key=True)
