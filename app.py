@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect, jsonify, flash
 import random
 import string
-from db_handler import DB_Handler
+from models import *
 
 app = Flask(__name__)
 app.secret_key = 'asdm32%$nm$#san12'
@@ -13,14 +13,23 @@ app.config['DB_CONNECT_DATA'] = {
 	'hostname': 'localhost',
 	'db_type': 'postgres'
 }
+USERNAME = 'postgres'
+PASSWORD = 'admin'
+PORT = '5432'
+DB_NAME = 'postgres'
+HOSTNAME = 'localhost'
+DB_TYPE = 'postgres'
 app.config['DB_TABLENAME'] = 'goo_url_mapping'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'{DB_TYPE}://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DB_NAME}'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
 
-db_handler = DB_Handler(app.config['DB_CONNECT_DATA'], app.config['DB_TABLENAME']) #Python class that executs the db queries
 
 @app.route('/')
 def home():
-	mappings = db_handler.get_user_mappings('test-user')
+	mappings = Mapping.query.filter_by(owner = 'test-user').all()
 	return render_template('home.html', mappings=mappings)
+	
 
 @app.route('/check_available', methods=['POST'])
 def check_available(): #returns a json answer to ajax request of url availabily
@@ -28,8 +37,8 @@ def check_available(): #returns a json answer to ajax request of url availabily
 	result = {'is_available': is_url_available(custom)}
 	return jsonify(result)
 
-def is_url_available(url):# returns if given url already taken.
-	mapping = db_handler.get_single_mapping(url)  
+def is_url_available(url):# returns if given url already taken. 
+	mapping = Mapping.query.filter_by(short_url = url).first()
 	return False if mapping else True
 
 @app.route('/short', methods=['POST'])
@@ -40,7 +49,9 @@ def short():#gets the form data and add the short. not validating because it hap
 		short_url = generate_short_url()
 		while (not is_url_available(short_url)):#if generated url is taken, generate until available
 			short_url = generate_short_url()
-	db_handler.add_new_mapping(short_url,long_url, 'test-user')
+	mapping = Mapping(short_url=short_url, long_url=long_url, owner='test-user')
+	db.session.add(mapping)
+	db.session.commit()
 	flash(f"Great Success! goo/{short_url} will now redirect to {long_url}",'success')
 	return redirect(url_for('home'))
 
@@ -52,7 +63,7 @@ def generate_short_url():#generate a new short url
 
 @app.route('/<short_url>')
 def redirect_to_long(short_url):#redirecting a short url to its original long url
-	mapping = db_handler.get_single_mapping(short_url)
+	mapping = Mapping.query.filter_by(short_url = short_url).first()
 	if mapping:
 		print(f'redirecting {short_url} to {mapping.long_url}')
 		return redirect(mapping.long_url)
@@ -64,7 +75,9 @@ def redirect_to_long(short_url):#redirecting a short url to its original long ur
 @app.route('/remove', methods=['POST'])
 def remove():#removes a url mapping after delete button pressed
 	short_url = request.form['delete']
-	db_handler.remove_mapping(short_url)
+	mapping = Mapping.query.filter_by(short_url = short_url).first()
+	db.session.delete(mapping)
+	db.session.commit()
 	flash(f'Deleted Successfully. {short_url} is now an untaken redirect link.', 'success')
 	return redirect(url_for('home'))
 

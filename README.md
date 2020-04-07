@@ -2,6 +2,7 @@
 A simple flask link shortening application
 ## Basic features
 - postgreSQL db managing data
+- ORM db interaction
 - all-in-one page application
 - js client side url validation 
 - ajax server side url availabilty check
