@@ -14,6 +14,8 @@ DB_TYPE = 'postgres'
 app.config['SQLALCHEMY_DATABASE_URI'] = f'{DB_TYPE}://{USERNAME}:{PASSWORD}@{HOSTNAME}:{PORT}/{DB_NAME}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
+with app.app_context():
+	db.create_all()
 
 @app.route('/')
 def home():
@@ -70,7 +72,3 @@ def remove():#removes a url mapping after delete button pressed
 	db.session.commit()
 	flash(f'Deleted Successfully. {short_url} is now an untaken redirect link.', 'success')
 	return redirect(url_for('home'))
-
-
-if __name__ == '__main__':
-	app.run(debug=True)
